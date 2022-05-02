@@ -1,16 +1,31 @@
 <?php
 
-echo "Hello\n\n";
+use App\Router;
 
-$host = "mysql";
-$user = getenv('MYSQL_USER');
-$password = getenv('MYSQL_PASSWORD');
+require '../vendor/autoload.php';
 
-$connect = new mysqli($host, $user, $password);
 
-if ( $connect->connect_error ) {
-    die("Connection failed : " . $connect->connect_error);
-}
 
-echo "Connect to MySQL server successfully !\n\n";
-echo "Welcome on the app !";
+echo("SERVEUR REQUEST URI");
+echo("<br>");
+echo('<pre>');
+print_r($_SERVER);
+echo('</pre>');
+
+
+//$router = new Router(dirname(__DIR__) . '/views');
+//
+//$router
+//    ->get('/machines', 'machines/index', "machines")
+//    ->run();
+
+$router = new \App\AlRouter();
+
+define('VIEW_PATH', dirname(__DIR__) . '/views');
+
+$router->map('GET', '/machines', function () {
+    require VIEW_PATH . '/machines/index.php';
+});
+
+$match = $router->match();
+$match['target']();
